@@ -15,18 +15,13 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
   const [error, setError] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // 데이터 로드 및 읽음 처리 동기화
   useEffect(() => {
     if (isAuthenticated) {
       const data = localStorage.getItem('consultations');
       if (data) {
         try {
           const parsedData: ConsultationRequest[] = JSON.parse(data);
-          
-          // 모든 내역을 읽음 상태로 업데이트
           const updatedData = parsedData.map(r => ({ ...r, isRead: true }));
-          
-          // 상태와 스토리지를 동시에 업데이트하여 UI와 데이터를 일치시킴
           setRequests(updatedData);
           localStorage.setItem('consultations', JSON.stringify(updatedData));
         } catch (e) {
@@ -84,7 +79,7 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
           <div className="size-20 bg-gray-50 rounded-[30px] flex items-center justify-center mb-6 text-gray-300">
             <span className="material-symbols-outlined text-[40px]">lock</span>
           </div>
-          <h2 className="text-[24px] font-black text-[#1A1A1A] tracking-tighter mb-2">Admin Login</h2>
+          <h2 className="text-[22px] font-black text-[#1A1A1A] tracking-tighter mb-2">Admin Login</h2>
           <p className="text-[#888888] text-[14px] text-center mb-10 leading-relaxed">
             비밀번호 4자리를 입력해주세요.
           </p>
@@ -98,7 +93,7 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
               maxLength={4}
               inputMode="numeric"
               autoFocus
-              className="w-full text-center text-[32px] tracking-[0.5em] h-20 bg-gray-50 rounded-[24px] border-2 border-transparent focus:border-primary focus:bg-white outline-none transition-all font-black"
+              className="w-full text-center text-[30px] tracking-[0.5em] h-20 bg-gray-50 rounded-[24px] border-2 border-transparent focus:border-primary focus:bg-white outline-none transition-all font-black"
             />
             <button 
               type="submit"
@@ -119,7 +114,7 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
       <div className="p-6">
         <div className="flex justify-between items-end mb-8">
           <div>
-            <h3 className="text-[26px] font-black text-[#1A1A1A] tracking-tighter">상담 신청 현황</h3>
+            <h3 className="text-[24px] font-black text-[#1A1A1A] tracking-tighter">상담 신청 현황</h3>
             <p className="text-[#888888] text-[14px] mt-1 font-medium">총 {requests.length}건 접수됨</p>
           </div>
           <button 
@@ -145,7 +140,7 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
               >
                 <div className="flex-1 flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[19px] font-black text-[#1A1A1A]">{request.name}</span>
+                    <span className="text-[17px] font-black text-[#1A1A1A]">{request.name}</span>
                     {request.isRead === false && (
                       <span className="text-[9px] bg-primary text-white px-1.5 py-0.5 rounded font-black uppercase">New</span>
                     )}
@@ -153,7 +148,7 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
                   
                   <div 
                     onClick={(e) => handleCopy(e, request.phone, request.id)}
-                    className="flex items-center gap-2 text-[#555555] font-bold text-[16px] cursor-pointer group w-fit py-1"
+                    className="flex items-center gap-2 text-[#555555] font-bold text-[15px] cursor-pointer group w-fit py-1"
                     title="클릭하여 번호 복사"
                   >
                     <span className="tabular-nums">{request.phone}</span>

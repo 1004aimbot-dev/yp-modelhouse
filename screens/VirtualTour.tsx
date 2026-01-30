@@ -110,7 +110,6 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
     <div className="flex flex-col h-screen bg-[#0a0a0a] select-none overflow-hidden">
       <TopNav title="15평형 VR 투어" onBack={goBack} />
       
-      {/* 구역 선택 탭 */}
       <div className="bg-white px-4 py-4 border-b border-gray-100 overflow-x-auto no-scrollbar shrink-0">
         <div className="flex gap-2 min-w-max justify-center">
           {AREAS.map(area => (
@@ -130,7 +129,6 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
         </div>
       </div>
 
-      {/* VR 뷰어 메인 */}
       <div 
         className="relative flex-1 bg-gray-900 overflow-hidden cursor-grab active:cursor-grabbing"
         onMouseDown={handleStart}
@@ -141,7 +139,6 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
         onTouchMove={handleMove}
         onTouchEnd={handleEnd}
       >
-        {/* 로딩 인디케이터 - 투명 배경 오버레이 */}
         {isImgLoading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center z-[40] bg-black/30 backdrop-blur-sm pointer-events-none transition-opacity duration-300">
             <div className="w-12 h-12 border-4 border-white/20 border-t-primary rounded-full animate-spin mb-4"></div>
@@ -149,7 +146,6 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
           </div>
         )}
 
-        {/* 이미지 컨테이너 - 확실한 가시성 확보 */}
         <div 
           className="absolute w-[130%] h-[130%] top-[-15%] left-[-15%] will-change-transform"
           style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
@@ -166,7 +162,6 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
           
           <div className="absolute inset-0 bg-black/10 pointer-events-none" />
 
-          {/* 핫스팟 */}
           {activeArea.hotspots.map((spot, index) => (
             <div 
               key={`${activeArea.id}-spot-${index}`}
@@ -199,20 +194,18 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
           ))}
         </div>
 
-        {/* 드래그 안내 */}
         <div className="absolute top-6 left-1/2 -translate-x-1/2 flex items-center gap-2.5 bg-black/40 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/10 pointer-events-none z-30">
           <span className="material-symbols-outlined text-white text-[18px] animate-pulse">360</span>
           <p className="text-white text-[11px] font-bold">화면을 드래그하여 둘러보세요</p>
         </div>
       </div>
 
-      {/* 하단 설명 카드 - 내부 여백 조정하여 버튼 폭 통일 */}
       <div className="bg-white px-6 pt-8 pb-12 rounded-t-[40px] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] shrink-0 z-40 border-t border-gray-50">
         <div className="px-2">
           <div className="flex items-center justify-between mb-4">
             <div className="flex flex-col">
               <span className="text-primary text-[11px] font-black uppercase tracking-wider mb-0.5">Premium Architecture</span>
-              <h3 className="text-[24px] font-black text-[#1A1A1A] tracking-tighter">{activeArea.name} 미리보기</h3>
+              <h3 className="text-[22px] font-black text-[#1A1A1A] tracking-tighter">{activeArea.name} 미리보기</h3>
             </div>
             <div className="size-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400">
               <span className="material-symbols-outlined text-[24px]">{activeArea.icon}</span>
@@ -225,10 +218,9 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
           </p>
         </div>
 
-        {/* 하단 버튼 - 폭과 높이 통일 */}
         <button 
           onClick={() => navigateTo(Screen.Contact)}
-          className="w-full bg-primary text-white h-20 rounded-[24px] font-black text-[17px] flex items-center justify-center gap-2 shadow-xl shadow-primary/20 active:scale-[0.98] transition-all"
+          className="w-full bg-primary text-white h-20 rounded-[24px] font-black text-[15px] flex items-center justify-center gap-2 shadow-xl shadow-primary/20 active:scale-[0.98] transition-all"
         >
           실물 투어 사전 예약하기
           <span className="material-symbols-outlined font-black">arrow_forward</span>

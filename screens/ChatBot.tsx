@@ -104,7 +104,6 @@ const ChatBot: React.FC<ChatBotProps> = ({ navigateTo, goBack }) => {
     <div className="flex flex-col h-screen bg-[#F8F9FA] overflow-hidden">
       <TopNav title="AI VIP 컨시어지" onBack={goBack} />
       
-      {/* 채팅 내역 */}
       <div 
         ref={scrollRef}
         className="flex-1 overflow-y-auto px-5 py-6 space-y-6 no-scrollbar"
@@ -124,7 +123,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ navigateTo, goBack }) => {
                 </div>
               )}
               <div 
-                className={`px-5 py-3.5 rounded-[22px] text-[15px] leading-relaxed shadow-sm prose prose-sm max-w-none ${
+                className={`px-5 py-3.5 rounded-[22px] text-[13px] leading-relaxed shadow-sm prose prose-sm max-w-none ${
                   msg.role === 'user' 
                   ? 'bg-primary text-white rounded-tr-none' 
                   : 'bg-white text-[#333333] border border-gray-100 rounded-tl-none font-medium'
@@ -152,7 +151,6 @@ const ChatBot: React.FC<ChatBotProps> = ({ navigateTo, goBack }) => {
         )}
       </div>
 
-      {/* 퀵 질문 및 입력창 */}
       <div className="bg-white border-t border-gray-100 p-5 pb-10">
         <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4">
           {quickQuestions.map((q, i) => (

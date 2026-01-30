@@ -91,34 +91,34 @@ const Home: React.FC<HomeProps> = ({ navigateTo, toggleMenu }) => {
             
             <div className="flex items-start justify-center gap-2">
               <div className="flex flex-col items-center min-w-[50px]">
-                <div className="text-[32px] font-black text-[#1A1A1A] leading-none tracking-tighter tabular-nums">
+                <div className="text-[30px] font-black text-[#1A1A1A] leading-none tracking-tighter tabular-nums">
                   {formatNum(timeLeft.days)}
                 </div>
                 <div className="text-[11px] font-bold text-gray-400 mt-2">일</div>
               </div>
               
-              <div className="text-[24px] font-light text-gray-200 mt-0.5">:</div>
+              <div className="text-[26px] font-black text-[#1A1A1A] mt-0.5">:</div>
               
               <div className="flex flex-col items-center min-w-[50px]">
-                <div className="text-[32px] font-black text-[#1A1A1A] leading-none tracking-tighter tabular-nums">
+                <div className="text-[30px] font-black text-[#1A1A1A] leading-none tracking-tighter tabular-nums">
                   {formatNum(timeLeft.hours)}
                 </div>
                 <div className="text-[11px] font-bold text-gray-400 mt-2">시간</div>
               </div>
 
-              <div className="text-[24px] font-light text-gray-200 mt-0.5">:</div>
+              <div className="text-[26px] font-black text-[#1A1A1A] mt-0.5">:</div>
 
               <div className="flex flex-col items-center min-w-[50px]">
-                <div className="text-[32px] font-black text-[#1A1A1A] leading-none tracking-tighter tabular-nums">
+                <div className="text-[30px] font-black text-[#1A1A1A] leading-none tracking-tighter tabular-nums">
                   {formatNum(timeLeft.minutes)}
                 </div>
                 <div className="text-[11px] font-bold text-gray-400 mt-2">분</div>
               </div>
 
-              <div className="text-[24px] font-light text-gray-200 mt-0.5">:</div>
+              <div className="text-[26px] font-black text-[#1A1A1A] mt-0.5">:</div>
 
               <div className="flex flex-col items-center min-w-[50px]">
-                <div className="text-[32px] font-black text-primary leading-none tracking-tighter tabular-nums">
+                <div className="text-[30px] font-black text-primary leading-none tracking-tighter tabular-nums">
                   {formatNum(timeLeft.seconds)}
                 </div>
                 <div className="text-[11px] font-bold text-gray-400 mt-2">초</div>
@@ -136,19 +136,18 @@ const Home: React.FC<HomeProps> = ({ navigateTo, toggleMenu }) => {
             backgroundImage: `url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200")` 
           }}
         >
-          {/* 어두운 상단 오버레이를 조금 더 강화하여 가독성 확보 */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent opacity-60" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent opacity-60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-transparent to-transparent" />
           
           <div className="absolute bottom-12 left-10 right-10">
-            <div className="inline-block bg-primary/20 backdrop-blur-md px-5 py-2 rounded-full mb-6 border border-white/30">
-              <p className="text-primary text-[11px] font-black tracking-[0.1em]">VVIP 특별 초청 단지</p>
+            <div className="inline-block bg-white/90 backdrop-blur-xl px-5 py-2.5 rounded-full mb-6 border border-primary/20 shadow-lg">
+              <p className="text-primary text-[12px] font-black tracking-[0.1em]">VVIP 특별 초청 단지</p>
             </div>
             
-            <h1 className="text-white text-[28px] font-black leading-tight tracking-tighter drop-shadow-md">
+            <h1 className="text-white text-[26px] font-black leading-tight tracking-tighter drop-shadow-lg">
               2026년 5월,<br/>
               양평의 새로운<br/>
-              <span className="text-primary italic drop-shadow-none">Signature Life</span>
+              <span className="text-primary italic drop-shadow-md">Signature Life</span>
             </h1>
           </div>
         </div>
@@ -156,8 +155,8 @@ const Home: React.FC<HomeProps> = ({ navigateTo, toggleMenu }) => {
 
       {/* 브랜드 메시지 */}
       <div className="px-10 py-20 text-center">
-        <h2 className="text-[28px] font-black text-[#1A1A1A] tracking-tight leading-tight">작지만 완벽한 공간</h2>
-        <p className="text-[#777777] text-[16px] mt-4 leading-relaxed font-medium">
+        <h2 className="text-[26px] font-black text-[#1A1A1A] tracking-tight leading-tight">작지만 완벽한 공간</h2>
+        <p className="text-[#777777] text-[15px] mt-4 leading-relaxed font-medium">
           불필요한 것은 덜어내고 삶의 본질만 담았습니다.<br/>
           당신만을 위해 준비된 특별한 안식처를 만나보세요.
         </p>
@@ -167,7 +166,7 @@ const Home: React.FC<HomeProps> = ({ navigateTo, toggleMenu }) => {
       <div className="px-6 pb-12 mt-auto">
         <button 
           onClick={() => navigateTo(Screen.Contact)}
-          className="w-full bg-primary h-20 rounded-[24px] text-white text-[18px] font-black shadow-2xl shadow-primary/30 active:scale-[0.98] transition-all flex items-center justify-center gap-3"
+          className="w-full bg-primary h-20 rounded-[24px] text-white text-[16px] font-black shadow-2xl shadow-primary/30 active:scale-[0.98] transition-all flex items-center justify-center gap-3"
         >
           VIP 사전 상담 신청하기
           <span className="material-symbols-outlined font-black">arrow_forward</span>
