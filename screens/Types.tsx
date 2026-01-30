@@ -40,22 +40,40 @@ const Types: React.FC<TypesProps> = ({ navigateTo, goBack }) => {
         {HOUSE_TYPES.map(type => (
           <div key={type.id} className="px-6">
             <div className="bg-white rounded-[40px] shadow-sm border border-gray-100 overflow-hidden">
+              {/* 메인 렌더링 이미지 */}
               <div className="relative aspect-[1.6]">
                 <img src={type.img} alt={type.name} className="w-full h-full object-cover" />
-                <div className="absolute top-5 left-5 bg-white/90 px-4 py-1.5 rounded-full text-[11px] font-black text-primary">
+                <div className="absolute top-5 left-5 bg-white/90 px-4 py-1.5 rounded-full text-[11px] font-black text-primary border border-primary/20">
                   TYPE {type.id}
                 </div>
               </div>
+
               <div className="p-8">
                 <h4 className="text-2xl font-black text-text-main mb-2">{type.name}</h4>
                 <p className="text-text-sub text-sm leading-relaxed mb-6">{type.desc}</p>
+                
+                {/* 평면도 섹션 */}
+                <div className="mb-8 p-4 bg-gray-50 rounded-[24px] border border-gray-100">
+                  <div className="flex items-center justify-between mb-4 px-2">
+                    <span className="text-[11px] font-black text-primary uppercase tracking-widest">Architectural Floor Plan</span>
+                    <span className="material-symbols-outlined text-gray-300 text-[18px]">floor_plan</span>
+                  </div>
+                  <div className="bg-white rounded-xl border border-gray-100 overflow-hidden p-4 shadow-inner">
+                    <img 
+                      src={type.floorPlanImg} 
+                      alt={`${type.name} 평면도`} 
+                      className="w-full h-auto"
+                    />
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-between border-t border-gray-50 pt-6">
                   <span className="text-xl font-black text-primary">{type.size}</span>
                   <button 
                     onClick={() => navigateTo(Screen.VirtualTour)}
-                    className="text-primary text-sm font-bold flex items-center gap-1"
+                    className="text-primary text-sm font-bold flex items-center gap-1 group"
                   >
-                    VR 투어 <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+                    3D VR 투어 <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">chevron_right</span>
                   </button>
                 </div>
               </div>

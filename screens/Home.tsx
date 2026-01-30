@@ -136,18 +136,19 @@ const Home: React.FC<HomeProps> = ({ navigateTo, toggleMenu }) => {
             backgroundImage: `url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200")` 
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent opacity-90" />
+          {/* 어두운 상단 오버레이를 조금 더 강화하여 가독성 확보 */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent opacity-60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-transparent to-transparent" />
           
           <div className="absolute bottom-12 left-10 right-10">
-            <div className="inline-block bg-[#E0F2F1] px-5 py-2 rounded-full mb-6 border border-[#B2DFDB]/50">
-              <p className="text-[#00897B] text-[11px] font-black tracking-[0.1em]">VVIP 특별 초청 단지</p>
+            <div className="inline-block bg-primary/20 backdrop-blur-md px-5 py-2 rounded-full mb-6 border border-white/30">
+              <p className="text-primary text-[11px] font-black tracking-[0.1em]">VVIP 특별 초청 단지</p>
             </div>
             
-            <h1 className="text-[#222222] text-[34px] font-black leading-[1.5] tracking-tighter">
+            <h1 className="text-white text-[28px] font-black leading-tight tracking-tighter drop-shadow-md">
               2026년 5월,<br/>
               양평의 새로운<br/>
-              <span className="text-primary italic">Signature Life</span>
+              <span className="text-primary italic drop-shadow-none">Signature Life</span>
             </h1>
           </div>
         </div>
@@ -162,7 +163,7 @@ const Home: React.FC<HomeProps> = ({ navigateTo, toggleMenu }) => {
         </p>
       </div>
 
-      {/* 하단 상담 신청 버튼 - 폭과 높이 통일 */}
+      {/* 하단 상담 신청 버튼 */}
       <div className="px-6 pb-12 mt-auto">
         <button 
           onClick={() => navigateTo(Screen.Contact)}

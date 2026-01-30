@@ -15,17 +15,19 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
   const [error, setError] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // 데이터 로드 및 읽음 처리
+  // 데이터 로드 및 읽음 처리 동기화
   useEffect(() => {
     if (isAuthenticated) {
       const data = localStorage.getItem('consultations');
       if (data) {
         try {
           const parsedData: ConsultationRequest[] = JSON.parse(data);
-          setRequests(parsedData);
-
-          // 모든 내역을 읽음 상태로 업데이트하여 로컬 스토리지에 저장
+          
+          // 모든 내역을 읽음 상태로 업데이트
           const updatedData = parsedData.map(r => ({ ...r, isRead: true }));
+          
+          // 상태와 스토리지를 동시에 업데이트하여 UI와 데이터를 일치시킴
+          setRequests(updatedData);
           localStorage.setItem('consultations', JSON.stringify(updatedData));
         } catch (e) {
           console.error("데이터 파싱 오류:", e);
@@ -47,16 +49,11 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
     }
   };
 
-  const handleDelete = (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
+  const handleDelete = (id: string) => {
     if (window.confirm('이 신청 내역을 삭제하시겠습니까?')) {
-      setRequests(prev => {
-        const updated = prev.filter(r => r.id !== id);
-        localStorage.setItem('consultations', JSON.stringify(updated));
-        return updated;
-      });
+      const updated = requests.filter(r => r.id !== id);
+      setRequests(updated);
+      localStorage.setItem('consultations', JSON.stringify(updated));
     }
   };
 
@@ -72,8 +69,7 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
     });
   };
 
-  const clearAll = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const clearAll = () => {
     if (window.confirm('주의: 모든 내역이 삭제됩니다. 계속하시겠습니까?')) {
       setRequests([]);
       localStorage.removeItem('consultations');
@@ -127,6 +123,7 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
             <p className="text-[#888888] text-[14px] mt-1 font-medium">총 {requests.length}건 접수됨</p>
           </div>
           <button 
+            type="button"
             onClick={clearAll}
             className="text-[12px] font-bold text-red-500 border border-red-100 bg-white px-4 py-2 rounded-xl active:scale-95 transition-all shadow-sm"
           >
@@ -144,13 +141,13 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
             {requests.map((request) => (
               <div 
                 key={request.id} 
-                className={`bg-white rounded-[32px] p-6 border shadow-sm flex items-center justify-between transition-all ${request.isRead ? 'border-gray-100' : 'border-primary/20 bg-primary/5'}`}
+                className="bg-white rounded-[32px] p-6 border border-gray-100 shadow-sm flex items-center justify-between transition-all"
               >
                 <div className="flex-1 flex flex-col gap-1">
                   <div className="flex items-center gap-2">
                     <span className="text-[19px] font-black text-[#1A1A1A]">{request.name}</span>
-                    {!request.isRead && (
-                      <span className="text-[9px] bg-primary text-white px-1.5 py-0.5 rounded font-black uppercase animate-pulse">New Request</span>
+                    {request.isRead === false && (
+                      <span className="text-[9px] bg-primary text-white px-1.5 py-0.5 rounded font-black uppercase">New</span>
                     )}
                   </div>
                   
@@ -171,11 +168,12 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
                 </div>
                 
                 <button 
-                  onClick={(e) => handleDelete(e, request.id)}
-                  className="size-14 rounded-2xl flex items-center justify-center bg-gray-50 text-gray-300 hover:text-red-500 hover:bg-red-50 active:scale-90 transition-all shadow-sm group border border-transparent hover:border-red-100"
+                  type="button"
+                  onClick={() => handleDelete(request.id)}
+                  className="size-14 rounded-2xl flex items-center justify-center bg-gray-50 text-gray-300 hover:text-red-500 hover:bg-red-50 active:scale-90 transition-all shadow-sm group border border-transparent hover:border-red-100 shrink-0"
                   aria-label="내역 삭제"
                 >
-                  <span className="material-symbols-outlined text-[26px] pointer-events-none group-hover:scale-110 transition-transform">delete</span>
+                  <span className="material-symbols-outlined text-[26px] transition-transform group-hover:scale-110">delete</span>
                 </button>
               </div>
             ))}

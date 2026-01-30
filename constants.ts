@@ -1,153 +1,120 @@
 
 import { HouseType, Benefit } from './types';
 
-// Helper for architectural dimension ticks
-const dimTick = (x: number, y: number, isVertical: boolean) => {
-  const size = 15;
-  if (isVertical) {
-    return `<line x1="${x - size}" y1="${y + size}" x2="${x + size}" y2="${y - size}" stroke="#999" stroke-width="1.5"/>`;
-  }
-  return `<line x1="${x - size}" y1="${y - size}" x2="${x + size}" y2="${y + size}" stroke="#999" stroke-width="1.5"/>`;
-};
-
-// 4x8m 복층 평면도 SVG (Type A)
-const FLOOR_PLAN_A = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
-  <rect width="800" height="1000" fill="white"/>
-  <rect x="200" y="100" width="400" height="800" fill="none" stroke="%23139E8C" stroke-width="4"/>
-  <text x="400" y="70" text-anchor="middle" font-family="Pretendard" font-weight="bold" font-size="24" fill="%23139E8C">1ST FLOOR (Living &amp; Kitchen)</text>
-  <line x1="200" y1="300" x2="600" y2="300" stroke="%23EEEEEE" stroke-width="2"/>
-  <rect x="200" y="100" width="100" height="120" fill="%23F8F9FA"/>
-  <text x="250" y="165" text-anchor="middle" font-size="12" fill="%23999999">ENTRANCE</text>
-  <rect x="500" y="100" width="100" height="150" fill="%23F1F1F1"/>
-  <text x="550" y="180" text-anchor="middle" font-size="12" fill="%23999999">BATH</text>
-  <path d="M 500 300 L 600 300 L 600 500 L 550 500 L 550 300" fill="%23E8F5F3" stroke="%23139E8C" stroke-width="1"/>
-  <text x="575" y="400" text-anchor="middle" font-size="10" fill="%23139E8C" transform="rotate(90, 575, 400)">STAIRS UP</text>
-  <text x="400" y="600" text-anchor="middle" font-weight="bold" font-size="20" fill="%23333333">LIVING ROOM</text>
+// Type A: 12평 (4x8m)
+const FLOOR_PLAN_A = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1100">
+  <rect width="800" height="1100" fill="white"/>
+  <!-- 외벽 -->
+  <rect x="200" y="150" width="400" height="800" fill="none" stroke="%23333" stroke-width="4"/>
   
-  <!-- Dimension Lines Vertical -->
-  <line x1="140" y1="100" x2="140" y2="900" stroke="%23999" stroke-width="1"/>
-  <line x1="130" y1="100" x2="200" y2="100" stroke="%23999" stroke-width="0.5"/>
-  <line x1="130" y1="900" x2="200" y2="900" stroke="%23999" stroke-width="0.5"/>
-  <line x1="130" y1="110" x2="150" y2="90" stroke="%23999" stroke-width="1.5"/>
-  <line x1="130" y1="910" x2="150" y2="890" stroke="%23999" stroke-width="1.5"/>
-  <text x="110" y="500" text-anchor="middle" font-size="18" fill="%23999" transform="rotate(-90, 110, 500)" font-weight="bold">8.0m</text>
+  <!-- 내부 구획 -->
+  <line x1="200" y1="350" x2="600" y2="350" stroke="%23DDD" stroke-width="2"/>
+  <rect x="500" y="150" width="100" height="150" fill="%23F5F5F5" stroke="%23CCC" stroke-width="1"/>
   
-  <!-- Dimension Lines Horizontal -->
-  <line x1="200" y1="950" x2="600" y2="950" stroke="%23999" stroke-width="1"/>
-  <line x1="200" y1="900" x2="200" y2="960" stroke="%23999" stroke-width="0.5"/>
-  <line x1="600" y1="900" x2="600" y2="960" stroke="%23999" stroke-width="0.5"/>
-  <line x1="190" y1="940" x2="210" y2="960" stroke="%23999" stroke-width="1.5"/>
-  <line x1="590" y1="940" x2="610" y2="960" stroke="%23999" stroke-width="1.5"/>
-  <text x="400" y="985" text-anchor="middle" font-size="18" fill="%23999" font-weight="bold">4.0m</text>
+  <!-- 라벨 -->
+  <text x="400" y="100" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="28" fill="%23139E8C">TYPE A · STUDIO</text>
+  <text x="400" y="650" text-anchor="middle" font-family="Pretendard" font-weight="800" font-size="22" fill="%23555">LIVING / DINING</text>
+  <text x="400" y="280" text-anchor="middle" font-family="Pretendard" font-weight="700" font-size="16" fill="%23888">KITCHEN</text>
+  <text x="550" y="230" text-anchor="middle" font-family="Pretendard" font-weight="700" font-size="14" fill="%23AAA">BATH</text>
+  <text x="250" y="250" text-anchor="middle" font-family="Pretendard" font-weight="700" font-size="14" fill="%23AAA">ENT.</text>
+  
+  <!-- 복층 표시 -->
+  <rect x="250" y="450" width="300" height="300" fill="%23139E8C" fill-opacity="0.05" stroke="%23139E8C" stroke-width="1" stroke-dasharray="8,4"/>
+  <text x="400" y="610" text-anchor="middle" font-family="Pretendard" font-weight="800" font-size="16" fill="%23139E8C">LOFT (UPPER FLOOR)</text>
 
-  <rect x="250" y="350" width="200" height="250" fill="%23139E8C" fill-opacity="0.05" stroke="%23139E8C" stroke-dasharray="4"/>
-  <text x="350" y="480" text-anchor="middle" font-weight="bold" font-size="16" fill="%23139E8C">2ND FLOOR (LOFT)</text>
+  <!-- 치수선 - 세로 -->
+  <line x1="120" y1="150" x2="120" y2="950" stroke="%23999" stroke-width="1.5"/>
+  <line x1="110" y1="150" x2="130" y2="150" stroke="%23999" stroke-width="1.5"/>
+  <line x1="110" y1="950" x2="130" y2="950" stroke="%23999" stroke-width="1.5"/>
+  <text x="90" y="550" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="20" fill="%23999" transform="rotate(-90, 90, 550)">8.0 m</text>
+  
+  <!-- 치수선 - 가로 -->
+  <line x1="200" y1="1020" x2="600" y2="1020" stroke="%23999" stroke-width="1.5"/>
+  <line x1="200" y1="1010" x2="200" y2="1030" stroke="%23999" stroke-width="1.5"/>
+  <line x1="600" y1="1010" x2="600" y2="1030" stroke="%23999" stroke-width="1.5"/>
+  <text x="400" y="1060" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="20" fill="%23999">4.0 m</text>
 </svg>`;
 
-// Type B: 1.5룸 분리형 평면도 (15평)
-const FLOOR_PLAN_B = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200">
-  <rect width="800" height="1200" fill="white"/>
-  <rect x="175" y="100" width="450" height="1000" fill="none" stroke="%23139E8C" stroke-width="4"/>
-  <text x="400" y="70" text-anchor="middle" font-family="Pretendard" font-weight="bold" font-size="24" fill="%23139E8C">TYPE B · 1.5 ROOM SUITE</text>
+// Type B: 15평 (4.5x11m)
+const FLOOR_PLAN_B = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1350">
+  <rect width="800" height="1350" fill="white"/>
+  <rect x="200" y="100" width="400" height="1050" fill="none" stroke="%23333" stroke-width="4"/>
   
-  <rect x="175" y="100" width="120" height="150" fill="%23F8F9FA"/>
-  <text x="235" y="180" text-anchor="middle" font-size="12" fill="%23999999">ENTRANCE</text>
+  <!-- 내부 벽체 -->
+  <line x1="200" y1="750" x2="600" y2="750" stroke="%23333" stroke-width="3"/>
+  <rect x="500" y="100" width="100" height="200" fill="%23F5F5F5" stroke="%23CCC" stroke-width="1"/>
   
-  <rect x="530" y="100" width="95" height="200" fill="%23F1F1F1"/>
-  <text x="577" y="200" text-anchor="middle" font-size="12" fill="%23999999">BATH</text>
-
-  <rect x="175" y="400" width="450" height="350" fill="%23FAFAFA"/>
-  <text x="400" y="580" text-anchor="middle" font-weight="bold" font-size="20" fill="%23333333">LIVING &amp; KITCHEN</text>
-
-  <line x1="175" y1="750" x2="625" y2="750" stroke="%23139E8C" stroke-width="2" stroke-dasharray="8"/>
-  <text x="400" y="930" text-anchor="middle" font-weight="bold" font-size="20" fill="%23333333">PRIVATE BEDROOM</text>
+  <!-- 라벨 -->
+  <text x="400" y="60" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="28" fill="%23139E8C">TYPE B · 1.5 ROOM</text>
+  <text x="400" y="980" text-anchor="middle" font-family="Pretendard" font-weight="800" font-size="24" fill="%23444">BEDROOM</text>
+  <text x="400" y="500" text-anchor="middle" font-family="Pretendard" font-weight="800" font-size="24" fill="%23444">LIVING / KITCHEN</text>
+  <text x="550" y="210" text-anchor="middle" font-family="Pretendard" font-weight="700" font-size="14" fill="%23AAA">BATH</text>
   
-  <!-- Dimension Lines Vertical -->
-  <line x1="120" y1="100" x2="120" y2="1100" stroke="%23999" stroke-width="1"/>
-  <line x1="110" y1="100" x2="175" y2="100" stroke="%23999" stroke-width="0.5"/>
-  <line x1="110" y1="1100" x2="175" y2="1100" stroke="%23999" stroke-width="0.5"/>
-  <line x1="110" y1="110" x2="130" y2="90" stroke="%23999" stroke-width="1.5"/>
-  <line x1="110" y1="1110" x2="130" y2="1090" stroke="%23999" stroke-width="1.5"/>
-  <text x="90" y="600" text-anchor="middle" font-size="18" fill="%23999" transform="rotate(-90, 90, 600)" font-weight="bold">11.0m</text>
+  <!-- 치수선 - 세로 -->
+  <line x1="120" y1="100" x2="120" y2="1150" stroke="%23999" stroke-width="1.5"/>
+  <line x1="110" y1="100" x2="130" y2="100" stroke="%23999" stroke-width="1.5"/>
+  <line x1="110" y1="1150" x2="130" y2="1150" stroke="%23999" stroke-width="1.5"/>
+  <text x="90" y="625" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="20" fill="%23999" transform="rotate(-90, 90, 625)">11.0 m</text>
   
-  <!-- Dimension Lines Horizontal -->
-  <line x1="175" y1="1150" x2="625" y2="1150" stroke="%23999" stroke-width="1"/>
-  <line x1="175" y1="1100" x2="175" y2="1160" stroke="%23999" stroke-width="0.5"/>
-  <line x1="625" y1="1100" x2="625" y2="1160" stroke="%23999" stroke-width="0.5"/>
-  <line x1="165" y1="1140" x2="185" y2="1160" stroke="%23999" stroke-width="1.5"/>
-  <line x1="615" y1="1140" x2="635" y2="1160" stroke="%23999" stroke-width="1.5"/>
-  <text x="400" y="1185" text-anchor="middle" font-size="18" fill="%23999" font-weight="bold">4.5m</text>
+  <!-- 치수선 - 가로 -->
+  <line x1="200" y1="1230" x2="600" y2="1230" stroke="%23999" stroke-width="1.5"/>
+  <line x1="200" y1="1220" x2="200" y2="1240" stroke="%23999" stroke-width="1.5"/>
+  <line x1="600" y1="1220" x2="600" y2="1240" stroke="%23999" stroke-width="1.5"/>
+  <text x="400" y="1280" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="20" fill="%23999">4.5 m</text>
 </svg>`;
 
-// Type C: 테라스 & 복층 로프트 평면도 (18평)
-const FLOOR_PLAN_C = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1300">
-  <rect width="800" height="1300" fill="white"/>
-  <rect x="150" y="100" width="500" height="900" fill="none" stroke="%23139E8C" stroke-width="4"/>
-  <rect x="150" y="1000" width="500" height="200" fill="%23E8F5F3" stroke="%23139E8C" stroke-width="2"/>
-  <text x="400" y="1110" text-anchor="middle" font-weight="bold" font-size="20" fill="%23139E8C">PRIVATE TERRACE</text>
+// Type C: 18평 (5x12m)
+const FLOOR_PLAN_C = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1450">
+  <rect width="800" height="1450" fill="white"/>
+  <!-- 실내 -->
+  <rect x="200" y="100" width="400" height="1000" fill="none" stroke="%23333" stroke-width="4"/>
+  <!-- 테라스 -->
+  <rect x="200" y="1100" width="400" height="200" fill="%23E8F5F3" stroke="%23139E8C" stroke-width="2" stroke-dasharray="4"/>
   
-  <rect x="150" y="100" width="150" height="150" fill="%23F8F9FA"/>
-  <text x="225" y="180" text-anchor="middle" font-size="12" fill="%23999999">ENTRANCE</text>
-
-  <text x="400" y="600" text-anchor="middle" font-weight="bold" font-size="24" fill="%23333333">GRAND LOUNGE</text>
-  <rect x="250" y="300" width="300" height="400" fill="%23139E8C" fill-opacity="0.05" stroke="%23139E8C" stroke-dasharray="5"/>
-  <text x="400" y="500" text-anchor="middle" font-weight="bold" font-size="18" fill="%23139E8C">LOFT AREA (2F)</text>
-
-  <!-- Total Vertical Dimension -->
-  <line x1="80" y1="100" x2="80" y2="1200" stroke="%23999" stroke-width="1"/>
-  <line x1="70" y1="100" x2="150" y2="100" stroke="%23999" stroke-width="0.5"/>
-  <line x1="70" y1="1200" x2="150" y2="1200" stroke="%23999" stroke-width="0.5"/>
-  <line x1="70" y1="110" x2="90" y2="90" stroke="%23999" stroke-width="1.5"/>
-  <line x1="70" y1="1210" x2="90" y2="1190" stroke="%23999" stroke-width="1.5"/>
-  <text x="50" y="650" text-anchor="middle" font-size="18" fill="%23999" transform="rotate(-90, 50, 650)" font-weight="bold">12.0m</text>
+  <!-- 라벨 -->
+  <text x="400" y="60" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="28" fill="%23139E8C">TYPE C · TERRACE LOFT</text>
+  <text x="400" y="600" text-anchor="middle" font-family="Pretendard" font-weight="800" font-size="24" fill="%23444">GRAND LOUNGE</text>
+  <text x="400" y="1210" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="18" fill="%23139E8C">PRIVATE TERRACE</text>
   
-  <!-- Terrace Vertical Segment -->
-  <line x1="110" y1="1000" x2="110" y2="1200" stroke="%23999" stroke-width="1" stroke-dasharray="2"/>
-  <line x1="100" y1="1010" x2="120" y2="990" stroke="%23999" stroke-width="1.5"/>
-  <line x1="100" y1="1210" x2="120" y2="1190" stroke="%23999" stroke-width="1.5"/>
-  <text x="95" y="1100" text-anchor="middle" font-size="14" fill="%23999" transform="rotate(-90, 95, 1100)">2.0m (Terrace)</text>
-
-  <!-- Dimension Lines Horizontal -->
-  <line x1="150" y1="1250" x2="650" y2="1250" stroke="%23999" stroke-width="1"/>
-  <line x1="150" y1="1200" x2="150" y2="1260" stroke="%23999" stroke-width="0.5"/>
-  <line x1="650" y1="1200" x2="650" y2="1260" stroke="%23999" stroke-width="0.5"/>
-  <line x1="140" y1="1240" x2="160" y2="1260" stroke="%23999" stroke-width="1.5"/>
-  <line x1="640" y1="1240" x2="660" y2="1260" stroke="%23999" stroke-width="1.5"/>
-  <text x="400" y="1285" text-anchor="middle" font-size="18" fill="%23999" font-weight="bold">5.0m</text>
+  <!-- 치수선 - 세로 전체 -->
+  <line x1="120" y1="100" x2="120" y2="1300" stroke="%23999" stroke-width="1.5"/>
+  <line x1="110" y1="100" x2="130" y2="100" stroke="%23999" stroke-width="1.5"/>
+  <line x1="110" y1="1300" x2="130" y2="1300" stroke="%23999" stroke-width="1.5"/>
+  <text x="90" y="700" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="20" fill="%23999" transform="rotate(-90, 90, 700)">12.0 m</text>
+  
+  <!-- 치수선 - 가로 -->
+  <line x1="200" y1="1380" x2="600" y2="1380" stroke="%23999" stroke-width="1.5"/>
+  <line x1="200" y1="1370" x2="200" y2="1390" stroke="%23999" stroke-width="1.5"/>
+  <line x1="600" y1="1370" x2="600" y2="1390" stroke="%23999" stroke-width="1.5"/>
+  <text x="400" y="1420" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="20" fill="%23999">5.0 m</text>
 </svg>`;
 
-// Type D: 3베이 3룸 패밀리 하우스 (20평)
-const FLOOR_PLAN_D = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800">
-  <rect width="1000" height="800" fill="white"/>
-  <rect x="100" y="150" width="800" height="500" fill="none" stroke="%23139E8C" stroke-width="4"/>
+// Type D: 20평 (11x6m)
+const FLOOR_PLAN_D = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="white"/>
+  <rect x="100" y="150" width="1000" height="500" fill="none" stroke="%23333" stroke-width="4"/>
   
-  <rect x="100" y="150" width="220" height="300" fill="%23FAFAFA"/>
-  <text x="210" y="310" text-anchor="middle" font-weight="bold" font-size="16" fill="%23666666">ROOM 1</text>
+  <!-- 내부 벽 -->
+  <line x1="400" y1="150" x2="400" y2="650" stroke="%23333" stroke-width="3"/>
+  <line x1="800" y1="150" x2="800" y2="650" stroke="%23333" stroke-width="3"/>
   
-  <rect x="320" y="150" width="360" height="500" fill="%23F8F9FA"/>
-  <text x="500" y="410" text-anchor="middle" font-weight="bold" font-size="20" fill="%23333333">LIVING &amp; KITCHEN</text>
+  <!-- 라벨 -->
+  <text x="600" y="100" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="28" fill="%23139E8C">TYPE D · FAMILY HOUSE</text>
+  <text x="250" y="410" text-anchor="middle" font-family="Pretendard" font-weight="800" font-size="20" fill="%23555">BEDROOM 1</text>
+  <text x="600" y="410" text-anchor="middle" font-family="Pretendard" font-weight="800" font-size="24" fill="%23444">LIVING / KITCHEN</text>
+  <text x="950" y="410" text-anchor="middle" font-family="Pretendard" font-weight="800" font-size="20" fill="%23555">BEDROOM 2</text>
   
-  <rect x="680" y="150" width="220" height="300" fill="%23FAFAFA"/>
-  <text x="790" y="310" text-anchor="middle" font-weight="bold" font-size="16" fill="%23666666">ROOM 2</text>
-
-  <rect x="680" y="450" width="220" height="200" fill="%23F1F1F1"/>
-  <text x="790" y="560" text-anchor="middle" font-weight="bold" font-size="16" fill="%23666666">MASTER</text>
-
-  <!-- Dimension Lines Horizontal -->
-  <line x1="100" y1="700" x2="900" y2="700" stroke="%23999" stroke-width="1"/>
-  <line x1="100" y1="650" x2="100" y2="710" stroke="%23999" stroke-width="0.5"/>
-  <line x1="900" y1="650" x2="900" y2="710" stroke="%23999" stroke-width="0.5"/>
-  <line x1="90" y1="690" x2="110" y2="710" stroke="%23999" stroke-width="1.5"/>
-  <line x1="890" y1="690" x2="910" y2="710" stroke="%23999" stroke-width="1.5"/>
-  <text x="500" y="735" text-anchor="middle" font-size="18" fill="%23999" font-weight="bold">11.0m</text>
+  <!-- 치수선 - 가로 -->
+  <line x1="100" y1="720" x2="1100" y2="720" stroke="%23999" stroke-width="1.5"/>
+  <line x1="100" y1="710" x2="100" y2="730" stroke="%23999" stroke-width="1.5"/>
+  <line x1="1100" y1="710" x2="1100" y2="730" stroke="%23999" stroke-width="1.5"/>
+  <text x="600" y="770" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="20" fill="%23999">11.0 m</text>
   
-  <!-- Dimension Lines Vertical -->
-  <line x1="940" y1="150" x2="940" y2="650" stroke="%23999" stroke-width="1"/>
-  <line x1="900" y1="150" x2="950" y2="150" stroke="%23999" stroke-width="0.5"/>
-  <line x1="900" y1="650" x2="950" y2="650" stroke="%23999" stroke-width="0.5"/>
-  <line x1="930" y1="160" x2="950" y2="140" stroke="%23999" stroke-width="1.5"/>
-  <line x1="930" y1="660" x2="950" y2="640" stroke="%23999" stroke-width="1.5"/>
-  <text x="975" y="400" text-anchor="middle" font-size="18" fill="%23999" transform="rotate(90, 975, 400)" font-weight="bold">6.0m</text>
+  <!-- 치수선 - 세로 -->
+  <line x1="1150" y1="150" x2="1150" y2="650" stroke="%23999" stroke-width="1.5"/>
+  <line x1="1140" y1="150" x2="1160" y2="150" stroke="%23999" stroke-width="1.5"/>
+  <line x1="1140" y1="650" x2="1160" y2="650" stroke="%23999" stroke-width="1.5"/>
+  <text x="1185" y="400" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="20" fill="%23999" transform="rotate(90, 1185, 400)">6.0 m</text>
 </svg>`;
 
 export const HOUSE_TYPES: HouseType[] = [
