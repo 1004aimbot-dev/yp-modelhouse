@@ -33,12 +33,12 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose, currentScreen, onN
 
   const menuItems = [
     { id: Screen.Home, label: '홈', icon: 'home' },
-    { id: Screen.Chat, label: 'AI VIP 상담', icon: 'smart_toy' },
     { id: Screen.Story, label: '브랜드 스토리', icon: 'auto_stories' },
     { id: Screen.Location, label: '입지 안내', icon: 'location_on' },
     { id: Screen.Types, label: '주택 타입', icon: 'villa' },
     { id: Screen.VirtualTour, label: '가상 투어', icon: 'view_in_ar' },
     { id: Screen.Benefits, label: 'VIP 혜택 안내', icon: 'workspace_premium' },
+    { id: Screen.SalesGuide, label: '분양 방식 안내', icon: 'info' },
     { id: Screen.Contact, label: '상담 신청하기', icon: 'event_available' },
   ];
 
@@ -53,9 +53,19 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose, currentScreen, onN
         className={`fixed top-0 left-0 bottom-0 w-[80%] max-w-[340px] bg-white z-[101] shadow-2xl transition-transform duration-500 ease-out flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-          <div>
-            <p className="text-primary text-[10px] font-bold tracking-[0.2em] uppercase">Premium Living</p>
-            <h2 className="text-xl font-bold tracking-tight mt-1">양평 리빙 빌리지</h2>
+          <div className="flex items-center">
+            <div className="size-10 bg-primary/5 rounded-xl flex items-center justify-center mr-3 border border-primary/10">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-primary">
+                <path d="M7 4L12 11L17 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 11V20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M16 16C16 16 18 16 19 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+                <path d="M5 14C5 14 6 14 7 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+              </svg>
+            </div>
+            <div>
+              <p className="text-primary text-[10px] font-bold tracking-[0.2em] uppercase">Premium Living</p>
+              <h2 className="text-xl font-bold tracking-tight mt-1">양평 리빙 빌리지</h2>
+            </div>
           </div>
           <button onClick={onClose} className="size-10 flex items-center justify-center text-text-sub">
             <span className="material-symbols-outlined">close</span>

@@ -7,12 +7,13 @@ import { HOUSE_TYPES } from '../constants';
 interface TypesProps {
   navigateTo: (screen: Screen) => void;
   goBack: () => void;
+  toggleMenu: () => void;
 }
 
-const Types: React.FC<TypesProps> = ({ navigateTo, goBack }) => {
+const Types: React.FC<TypesProps> = ({ navigateTo, goBack, toggleMenu }) => {
   return (
     <div className="flex flex-col bg-bg-light min-h-screen">
-      <TopNav title="평형 및 가격 안내" onBack={goBack} />
+      <TopNav title="평형 및 가격 안내" onBack={goBack} onMenu={toggleMenu} />
       
       <header className="px-6 pt-12 pb-10 text-center bg-white border-b border-gray-100">
         <span className="text-primary text-[10px] font-bold tracking-[0.4em] uppercase mb-4 block">Section 05</span>

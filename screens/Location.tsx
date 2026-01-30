@@ -6,120 +6,179 @@ import TopNav from '../components/TopNav';
 interface LocationProps {
   navigateTo: (screen: Screen) => void;
   goBack: () => void;
+  toggleMenu: () => void;
 }
 
-const LocationScreen: React.FC<LocationProps> = ({ navigateTo, goBack }) => {
+const LocationScreen: React.FC<LocationProps> = ({ navigateTo, goBack, toggleMenu }) => {
   return (
     <div className="flex flex-col bg-white min-h-screen">
-      <TopNav title="입지 및 교통 안내" onBack={goBack} />
+      <TopNav title="입지 및 교통 안내" onBack={goBack} onMenu={toggleMenu} />
       
-      {/* SECTION 02: 정밀 시간-거리 인포그래픽 */}
-      <div className="px-6 py-8 text-center border-b border-gray-50">
-        <span className="text-primary text-[9px] font-black tracking-[0.4em] uppercase mb-2 block opacity-70">Section 02</span>
-        <h2 className="text-[24px] font-black leading-tight tracking-tighter text-[#1A1A1A] mb-8">
-          가깝기 때문에<br/>가능한 삶
+      {/* SECTION 02: 동적 연결성 인포그래픽 */}
+      <div className="px-6 py-12 text-center border-b border-gray-50 bg-gradient-to-b from-white to-gray-50/30">
+        <span className="text-primary text-[10px] font-black tracking-[0.4em] uppercase mb-4 block opacity-70">Connectivity Logic</span>
+        <h2 className="text-[26px] font-black leading-tight tracking-tighter text-[#1A1A1A] mb-10">
+          서울을 곁에 둔<br/>압도적인 <span className="text-primary italic">20분대의 기적</span>
         </h2>
         
-        {/* 정밀 트래블 맵 (320x320) */}
-        <div className="relative w-full max-w-[320px] mx-auto aspect-square mb-10 flex items-center justify-center bg-[#F9F9F9] rounded-full border border-gray-100 shadow-inner">
+        {/* 애니메이션 트래블 레이아웃 */}
+        <div className="relative w-full max-w-[340px] mx-auto aspect-[1/1] mb-12 flex items-center justify-center">
           
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 320 320">
-            <circle cx="160" cy="160" r="140" fill="none" stroke="#EAEAEA" stroke-width="1.5" />
-            <circle cx="160" cy="160" r="100" fill="none" stroke="#EAEAEA" stroke-width="1" stroke-dasharray="4 4" />
-            <circle cx="160" cy="160" r="50" fill="#FFFFFF" stroke="#EAEAEA" stroke-width="1.2" />
+          {/* 배경 그리드/링 */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-40">
+            <div className="absolute w-[100%] h-[100%] border border-dashed border-gray-200 rounded-full"></div>
+            <div className="absolute w-[75%] h-[75%] border border-dashed border-gray-200 rounded-full"></div>
+            <div className="absolute w-[50%] h-[50%] border border-dashed border-gray-200 rounded-full"></div>
+          </div>
+
+          <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 340 340">
+            <defs>
+              <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#139E8C" stopOpacity="0" />
+                <stop offset="50%" stopColor="#139E8C" stopOpacity="1" />
+                <stop offset="100%" stopColor="#139E8C" stopOpacity="0" />
+              </linearGradient>
+            </defs>
             
-            <line x1="160" y1="160" x2="160" y2="20" stroke="#FF4D4D" stroke-width="1" stroke-dasharray="2 2" />
-            <line x1="160" y1="160" x2="260" y2="80" stroke="#FF4D4D" stroke-width="1.5" stroke-dasharray="2 2" />
-            <line x1="160" y1="160" x2="100" y2="210" stroke="#139E8C" stroke-width="2" stroke-linecap="round" />
-            <line x1="160" y1="160" x2="220" y2="210" stroke="#CCCCCC" stroke-width="1.5" />
+            {/* 서울-현장 메인 루트 (잠실) */}
+            <path 
+              d="M170 170 Q 240 100, 270 60" 
+              fill="none" 
+              stroke="#FF4D4D" 
+              strokeWidth="2.5" 
+              strokeLinecap="round"
+              className="animated-path"
+              style={{ strokeDasharray: '6, 4', animationDuration: '0.8s' }}
+            />
+            
+            {/* 서울-현장 메인 루트 (강남) */}
+            <path 
+              d="M170 170 Q 170 80, 170 20" 
+              fill="none" 
+              stroke="#666" 
+              strokeWidth="2" 
+              strokeLinecap="round"
+              className="animated-path"
+              style={{ strokeDasharray: '4, 6', animationDuration: '1.2s' }}
+            />
+
+            {/* 서종 IC 루프 */}
+            <path 
+              d="M170 170 L 100 220" 
+              fill="none" 
+              stroke="#139E8C" 
+              strokeWidth="3" 
+              strokeLinecap="round"
+              className="animated-path"
+              style={{ animationDuration: '0.5s' }}
+            />
           </svg>
 
-          <div className="z-20 bg-primary size-14 rounded-full flex flex-col items-center justify-center shadow-2xl shadow-primary/40 border-[3px] border-white">
-            <span className="material-symbols-outlined text-white text-[18px] font-bold">home</span>
-            <span className="text-white text-[8px] font-black tracking-tighter mt-0.5">SITE</span>
-          </div>
-
-          <div className="absolute top-[5px] left-1/2 -translate-x-1/2 z-10">
-            <div className="bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 flex items-center gap-1.5">
-              <span className="text-gray-400 font-black text-[11px]">강남 40분</span>
-              <div className="size-1.5 rounded-full bg-gray-200"></div>
+          {/* 현장 마커 (중심) */}
+          <div className="z-30 relative">
+            <div className="absolute -inset-6 bg-primary/20 rounded-full animate-ping opacity-30"></div>
+            <div className="bg-primary size-16 rounded-3xl flex flex-col items-center justify-center shadow-2xl shadow-primary/40 border-[4px] border-white transform rotate-45">
+              <div className="-rotate-45 flex flex-col items-center">
+                <span className="material-symbols-outlined text-white text-[20px] font-bold">home</span>
+                <span className="text-white text-[9px] font-black tracking-tighter mt-0.5">SITE</span>
+              </div>
             </div>
           </div>
 
-          <div className="absolute top-[65px] right-[25px] z-10 animate-bounce-subtle">
-            <div className="bg-[#FF4D4D] px-3.5 py-1.5 rounded-xl shadow-xl flex items-center gap-1.5 border border-white/20">
-              <span className="text-white font-black text-[13px]">잠실 25분</span>
-              <span className="material-symbols-outlined text-white text-[14px]">location_on</span>
+          {/* 잠실 마커 */}
+          <div className="absolute top-[35px] right-[40px] z-20 group">
+            <div className="relative flex flex-col items-center">
+              <div className="bg-[#FF4D4D] text-white px-4 py-2 rounded-2xl shadow-xl flex items-center gap-2 border border-white/20 animate-pulse-soft">
+                <span className="font-black text-[14px]">잠실 25분</span>
+                <span className="material-symbols-outlined text-[16px]">speed</span>
+              </div>
+              <div className="w-px h-6 bg-gradient-to-b from-[#FF4D4D] to-transparent"></div>
             </div>
           </div>
 
-          <div className="absolute top-[205px] left-[65px] z-10">
-            <div className="bg-white px-2.5 py-1.5 rounded-lg shadow-sm border border-primary/40 flex items-center gap-1">
-              <span className="text-primary font-black text-[11px]">서종 IC 1분</span>
-              <div className="size-1.5 rounded-full bg-primary animate-pulse"></div>
+          {/* 강남 마커 */}
+          <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 z-20">
+            <div className="bg-white px-3 py-1.5 rounded-xl shadow-md border border-gray-100 flex items-center gap-2">
+              <span className="text-text-sub font-black text-[11px]">강남 40분</span>
+              <div className="size-2 rounded-full bg-gray-200"></div>
             </div>
           </div>
-          
-          <div className="absolute top-[205px] left-[185px] z-10">
-            <div className="bg-white px-2.5 py-1.5 rounded-lg shadow-sm border border-gray-200 flex items-center gap-1">
-              <span className="text-gray-500 font-black text-[11px]">두물머리 3분</span>
-              <div className="size-1.5 rounded-full bg-gray-200"></div>
+
+          {/* 서종 IC 마커 */}
+          <div className="absolute bottom-[80px] left-[45px] z-20">
+            <div className="flex flex-col items-end">
+              <div className="bg-white px-3 py-2 rounded-xl shadow-lg border border-primary/20 flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-[16px] font-black">directions_car</span>
+                <span className="text-primary font-black text-[13px]">서종 IC 1분</span>
+              </div>
+              <p className="text-[10px] font-bold text-primary/60 mt-1 mr-2 tracking-tighter uppercase">Direct Access</p>
             </div>
           </div>
         </div>
 
-        <p className="text-[15px] font-black text-text-main leading-tight tracking-tight">
-          “출근도 가능한 전원주택,<br/>
-          그래서 주말용이 아닙니다.”
-        </p>
+        <div className="max-w-[300px] mx-auto space-y-4">
+          <p className="text-[16px] font-black text-text-main leading-snug tracking-tight">
+            서종 IC에서 600m,<br/>
+            내리자마자 <span className="text-primary">집이 마중 나옵니다.</span>
+          </p>
+          <div className="flex items-center justify-center gap-2">
+            <span className="h-px w-8 bg-gray-200"></span>
+            <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Efficiency of Life</span>
+            <span className="h-px w-8 bg-gray-200"></span>
+          </div>
+        </div>
       </div>
 
-      {/* SECTION 03: 고지대 입지 인포그래픽 */}
-      <div className="px-5 py-8 bg-gray-50/50">
-        <div className="text-center mb-6">
-          <span className="text-primary text-[9px] font-black tracking-[0.4em] uppercase mb-1.5 block opacity-70">Section 03</span>
-          <h3 className="text-[20px] font-black text-text-main tracking-tighter">입지는 복제될 수 없습니다</h3>
+      {/* SECTION 03: 고지대 입지 가독성 강화 */}
+      <div className="px-5 py-16 bg-gray-50/50">
+        <div className="text-center mb-10">
+          <span className="text-primary text-[10px] font-black tracking-[0.4em] uppercase mb-2 block opacity-70">Geological Advantage</span>
+          <h3 className="text-[22px] font-black text-text-main tracking-tighter">압도적인 조망, 안전한 삶</h3>
         </div>
 
-        <div className="space-y-3">
-          <div className="bg-white p-5 rounded-[24px] shadow-sm border border-gray-100/50">
-            <div className="flex items-center gap-4 mb-4">
-               <div className="size-9 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-                 <span className="material-symbols-outlined text-[18px] font-bold">water_lux</span>
+        <div className="space-y-4 max-w-[420px] mx-auto">
+          <div className="bg-white p-6 rounded-[32px] shadow-sm border border-gray-100 group">
+            <div className="flex items-center gap-4 mb-5">
+               <div className="size-11 bg-primary/10 rounded-2xl flex items-center justify-center text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                 <span className="material-symbols-outlined text-[22px] font-bold">water_lux</span>
                </div>
-               <h4 className="font-black text-[15px]">강을 내려다보는 고지대 입지</h4>
+               <div>
+                 <h4 className="font-black text-[16px] text-text-main">북한강 파노라마 뷰</h4>
+                 <p className="text-[12px] text-text-sub font-medium opacity-60">침수 걱정 없는 고지대 입지</p>
+               </div>
             </div>
             
-            <div className="h-20 w-full bg-[#F5F5F5] rounded-xl relative overflow-hidden flex items-end px-4 border border-gray-200/50">
-               <svg className="w-full h-full" viewBox="0 0 200 80">
-                 <path d="M0 80 L70 80 L140 40 L200 35 L200 80 Z" fill="#E2E8F0" />
-                 <path d="M140 40 L200 35" stroke="#139E8C" stroke-width="2" stroke-dasharray="3 3" />
-                 <circle cx="180" cy="38" r="4" fill="#FF4D4D" />
+            <div className="h-24 w-full bg-[#F5F5F5] rounded-[24px] relative overflow-hidden flex items-end px-5 border border-gray-200/50">
+               <svg className="w-full h-full" viewBox="0 0 200 80" preserveAspectRatio="none">
+                 <path d="M0 80 L60 80 L130 45 L200 40 L200 80 Z" fill="#E2E8F0" />
+                 <path d="M130 45 L200 40" stroke="#139E8C" strokeWidth="2.5" strokeDasharray="4 3" />
+                 <circle cx="180" cy="42" r="5" fill="#FF4D4D" className="animate-pulse" />
                </svg>
-               <div className="absolute left-4 bottom-2 text-[9px] font-black text-blue-400">Bukhangang River</div>
-               <div className="absolute right-4 top-2 text-[8px] font-black text-primary/60 tracking-tighter">FLOOD FREE ZONE</div>
+               <div className="absolute left-5 bottom-3 text-[10px] font-black text-blue-400 uppercase tracking-tighter opacity-70">Bukhangang (North Han River)</div>
+               <div className="absolute right-5 top-3 text-[9px] font-black text-primary bg-white/80 px-2 py-1 rounded-full shadow-sm">Elevation: +45m</div>
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-[24px] shadow-sm border border-gray-100/50 flex items-center gap-3">
-            <div className="size-9 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
-              <span className="material-symbols-outlined text-[18px] font-bold">verified</span>
+          <div className="bg-white p-5 rounded-[32px] shadow-sm border border-gray-100 flex items-center gap-4">
+            <div className="size-11 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shrink-0">
+              <span className="material-symbols-outlined text-[20px] font-bold">verified</span>
             </div>
             <div>
-              <p className="font-black text-[14px]">검증된 서종 생활권</p>
-              <p className="text-text-sub text-[11px] font-medium opacity-60 leading-tight">유명 카페, 문화 공간이 공존하는 지역</p>
+              <p className="font-black text-[15px] text-text-main">희소가치가 입증된 서종</p>
+              <p className="text-text-sub text-[12px] font-medium opacity-60 leading-tight">정재계 인사들이 선호하는 양평 최고의 부촌</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="px-6 pb-12 bg-white mt-auto pt-6">
+      {/* 하단 전환 버튼 */}
+      <div className="px-6 pb-16 bg-white mt-auto pt-8 border-t border-gray-50">
         <button 
           onClick={() => navigateTo(Screen.Types)}
-          className="w-full bg-primary text-white h-20 rounded-full font-black text-[16px] shadow-2xl shadow-primary/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group"
+          className="w-full bg-primary text-white h-20 rounded-full font-black text-[17px] shadow-2xl shadow-primary/30 active:scale-[0.98] transition-all flex items-center justify-center gap-3 group"
         >
-          평형 및 가격대 확인
-          <span className="material-symbols-outlined font-black group-hover:translate-x-1 transition-transform">chevron_right</span>
+          평형별 조망권 미리보기
+          <span className="material-symbols-outlined font-black group-hover:translate-x-1 transition-transform text-[22px]">chevron_right</span>
         </button>
       </div>
 

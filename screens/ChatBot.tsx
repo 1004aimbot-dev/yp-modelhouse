@@ -13,6 +13,7 @@ interface Message {
 interface ChatBotProps {
   navigateTo: (screen: Screen) => void;
   goBack: () => void;
+  toggleMenu: () => void;
 }
 
 const SYSTEM_INSTRUCTION = `
@@ -42,7 +43,7 @@ const SYSTEM_INSTRUCTION = `
    - 문단 사이에는 적절한 공백을 두어 시각적으로 쾌적하게 만드십시오.
 `;
 
-const ChatBot: React.FC<ChatBotProps> = ({ navigateTo, goBack }) => {
+const ChatBot: React.FC<ChatBotProps> = ({ navigateTo, goBack, toggleMenu }) => {
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', text: '안녕하세요, VIP 고객님. **양평 리빙 컴팩트 빌리지**의 AI 컨시어지 리빙입니다. \n\n입지, 주택 타입, 특별 혜택 등 궁금하신 내용을 말씀해 주시면 정성껏 안내해 드리겠습니다.' }
   ]);
@@ -102,7 +103,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ navigateTo, goBack }) => {
 
   return (
     <div className="flex flex-col h-screen bg-[#F8F9FA] overflow-hidden">
-      <TopNav title="AI VIP 컨시어지" onBack={goBack} />
+      <TopNav title="AI VIP 컨시어지" onBack={goBack} onMenu={toggleMenu} />
       
       <div 
         ref={scrollRef}
@@ -119,7 +120,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ navigateTo, goBack }) => {
                   <div className="size-6 bg-primary rounded-full flex items-center justify-center">
                     <span className="material-symbols-outlined text-white text-[14px]">smart_toy</span>
                   </div>
-                  <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">AI Concierge</span>
+                  <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">AI 컨시어지</span>
                 </div>
               )}
               <div 

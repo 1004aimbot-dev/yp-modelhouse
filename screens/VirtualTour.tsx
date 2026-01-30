@@ -56,11 +56,12 @@ const AREAS: AreaInfo[] = [
   },
   {
     id: 'exterior',
-    name: '외관',
-    icon: 'home',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200',
+    name: '연결성',
+    icon: 'speed',
+    image: 'https://images.unsplash.com/photo-1517154421773-0529f29ea451?q=80&w=1200&auto=format&fit=crop',
     hotspots: [
-      { top: '55%', left: '45%', title: '단독 프라이빗 테라스', desc: '나만의 작은 정원을 가꿀 수 있는 독립적인 실외 데크 공간입니다.' }
+      { top: '50%', left: '60%', title: '서울 동남권 20분대', desc: '잠실과 강남을 잇는 최단 경로의 중심. 도심의 인프라를 그대로 누리는 거리입니다.' },
+      { top: '30%', left: '40%', title: '하이엔드 라이프라인', desc: '수도권 제2순환도로와 서종 IC를 통해 완성되는 압도적인 광역 교통망입니다.' }
     ]
   }
 ];
@@ -68,35 +69,43 @@ const AREAS: AreaInfo[] = [
 interface VirtualTourProps {
   navigateTo: (screen: Screen) => void;
   goBack: () => void;
+  toggleMenu: () => void;
 }
 
-const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
+const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack, toggleMenu }) => {
   const [activeArea, setActiveArea] = useState<AreaInfo>(AREAS[0]);
   const [activeHotspot, setActiveHotspot] = useState<number | null>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [isImgLoading, setIsImgLoading] = useState(true);
   const startPos = useRef({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
+  const handlePointerDown = (e: React.PointerEvent) => {
     setIsDragging(true);
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    startPos.current = { x: clientX - offset.x, y: clientY - offset.y };
+    // Pointer capture를 통해 밖으로 나가도 이벤트를 계속 받음
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    startPos.current = { 
+      x: e.clientX - offset.x, 
+      y: e.clientY - offset.y 
+    };
+    setActiveHotspot(null); // 드래그 시작 시 팝업 닫기
   };
 
-  const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
+  const handlePointerMove = (e: React.PointerEvent) => {
     if (!isDragging) return;
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
     
-    const newX = Math.max(-100, Math.min(100, clientX - startPos.current.x));
-    const newY = Math.max(-60, Math.min(60, clientY - startPos.current.y));
+    // 이동 범위 확장 (-250px ~ 250px)
+    const newX = Math.max(-250, Math.min(250, e.clientX - startPos.current.x));
+    const newY = Math.max(-150, Math.min(150, e.clientY - startPos.current.y));
     
     setOffset({ x: newX, y: newY });
   };
 
-  const handleEnd = () => setIsDragging(false);
+  const handlePointerUp = (e: React.PointerEvent) => {
+    setIsDragging(false);
+    (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+  };
 
   const handleAreaChange = (area: AreaInfo) => {
     if (area.id === activeArea.id) return;
@@ -108,8 +117,9 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
 
   return (
     <div className="flex flex-col h-screen bg-[#0a0a0a] select-none overflow-hidden">
-      <TopNav title="15평형 VR 투어" onBack={goBack} />
+      <TopNav title="15평형 VR 투어" onBack={goBack} onMenu={toggleMenu} />
       
+      {/* 탭 메뉴 */}
       <div className="bg-white px-4 py-4 border-b border-gray-100 overflow-x-auto no-scrollbar shrink-0">
         <div className="flex gap-2 min-w-max justify-center">
           {AREAS.map(area => (
@@ -129,26 +139,25 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
         </div>
       </div>
 
+      {/* VR 캔버스 영역 */}
       <div 
-        className="relative flex-1 bg-gray-900 overflow-hidden cursor-grab active:cursor-grabbing"
-        onMouseDown={handleStart}
-        onMouseMove={handleMove}
-        onMouseUp={handleEnd}
-        onMouseLeave={handleEnd}
-        onTouchStart={handleStart}
-        onTouchMove={handleMove}
-        onTouchEnd={handleEnd}
+        ref={containerRef}
+        className="relative flex-1 bg-gray-900 overflow-hidden cursor-grab active:cursor-grabbing touch-none"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        style={{ touchAction: 'none' }} // 브라우저 기본 스크롤 방지
       >
         {isImgLoading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center z-[40] bg-black/30 backdrop-blur-sm pointer-events-none transition-opacity duration-300">
             <div className="w-12 h-12 border-4 border-white/20 border-t-primary rounded-full animate-spin mb-4"></div>
-            <p className="text-white text-[11px] font-black tracking-[0.2em] uppercase">Loading Space...</p>
+            <p className="text-white text-[11px] font-black tracking-[0.2em] uppercase">공간 불러오는 중...</p>
           </div>
         )}
 
         <div 
-          className="absolute w-[130%] h-[130%] top-[-15%] left-[-15%] will-change-transform"
-          style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
+          className="absolute w-[200%] h-[180%] top-[-40%] left-[-50%] will-change-transform transition-transform duration-75 ease-out"
+          style={{ transform: `translate3d(${offset.x}px, ${offset.y}px, 0)` }}
         >
           <img 
             key={activeArea.image} 
@@ -170,6 +179,7 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
             >
               <div className="relative flex flex-col items-center">
                 <button 
+                  onPointerDown={(e) => e.stopPropagation()} // 드래그 이벤트 전파 방지
                   onClick={(e) => {
                     e.stopPropagation();
                     setActiveHotspot(activeHotspot === index ? null : index);
@@ -182,8 +192,8 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
                 </button>
 
                 {activeHotspot === index && (
-                  <div className="absolute bottom-14 w-52 bg-white/95 backdrop-blur-xl p-5 rounded-[24px] shadow-2xl border border-white animate-in fade-in zoom-in-95 duration-200 z-50">
-                    <p className="text-primary text-[10px] font-black uppercase tracking-widest mb-1">Room Info</p>
+                  <div className="absolute bottom-14 w-52 bg-white/95 backdrop-blur-xl p-5 rounded-[24px] shadow-2xl border border-white animate-in fade-in zoom-in-95 duration-200 z-50 pointer-events-auto">
+                    <p className="text-primary text-[10px] font-black uppercase tracking-widest mb-1">정보 안내 (Information)</p>
                     <p className="text-[15px] font-black text-[#1A1A1A] mb-1 tracking-tight">{spot.title}</p>
                     <p className="text-[12px] text-gray-500 leading-relaxed font-medium">{spot.desc}</p>
                     <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white/95 rotate-45 border-r border-b border-gray-100"></div>
@@ -194,18 +204,20 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
           ))}
         </div>
 
+        {/* 조작 가이드 */}
         <div className="absolute top-6 left-1/2 -translate-x-1/2 flex items-center gap-2.5 bg-black/40 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/10 pointer-events-none z-30">
           <span className="material-symbols-outlined text-white text-[18px] animate-pulse">360</span>
-          <p className="text-white text-[11px] font-bold">화면을 드래그하여 둘러보세요</p>
+          <p className="text-white text-[11px] font-bold">상하좌우로 드래그하여 둘러보세요</p>
         </div>
       </div>
 
+      {/* 하단 정보 영역 */}
       <div className="bg-white px-6 pt-8 pb-12 rounded-t-[40px] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] shrink-0 z-40 border-t border-gray-50">
         <div className="px-2">
           <div className="flex items-center justify-between mb-4">
             <div className="flex flex-col">
               <span className="text-primary text-[11px] font-black uppercase tracking-wider mb-0.5">Premium Architecture</span>
-              <h3 className="text-[22px] font-black text-[#1A1A1A] tracking-tighter">{activeArea.name} 미리보기</h3>
+              <h3 className="text-[22px] font-black text-[#1A1A1A] tracking-tighter">{activeArea.name} 상세 정보</h3>
             </div>
             <div className="size-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400">
               <span className="material-symbols-outlined text-[24px]">{activeArea.icon}</span>
@@ -213,8 +225,8 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ navigateTo, goBack }) => {
           </div>
           
           <p className="text-gray-500 text-[14px] leading-relaxed mb-8 font-medium">
-            최고급 자재로 마감된 실제 내부 모습을 확인하세요.<br/>
-            <b>상단 메뉴</b>를 통해 다른 공간으로 즉시 이동 가능합니다.
+            최고급 자재로 마감된 실제 내부 공간을 360도로 확인하세요.<br/>
+            <b>+ 버튼</b>을 누르면 자재 및 인프라에 대한 상세 설명이 표시됩니다.
           </p>
         </div>
 

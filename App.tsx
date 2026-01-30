@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Screen } from './types';
 import Home from './screens/Home';
 import LocationScreen from './screens/Location';
@@ -10,24 +10,13 @@ import VirtualTour from './screens/VirtualTour';
 import Contact from './screens/Contact';
 import Admin from './screens/Admin';
 import ChatBot from './screens/ChatBot';
+import SalesGuide from './screens/SalesGuide';
 import SideMenu from './components/SideMenu';
 
 const App: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>(Screen.Home);
   const [history, setHistory] = useState<Screen[]>([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
-  const touchStartX = useRef<number | null>(null);
-  const touchEndX = useRef<number | null>(null);
-
-  const screenSequence = [
-    Screen.Home,
-    Screen.Story,
-    Screen.Types,
-    Screen.Location,
-    Screen.Benefits,
-    Screen.Contact
-  ];
 
   const navigateTo = useCallback((screen: Screen) => {
     if (screen === currentScreen) return;
@@ -51,43 +40,10 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [history]);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (isMenuOpen || currentScreen === Screen.VirtualTour || currentScreen === Screen.Admin || currentScreen === Screen.Chat) return;
-    touchStartX.current = e.targetTouches[0].clientX;
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (isMenuOpen || currentScreen === Screen.VirtualTour || currentScreen === Screen.Admin || currentScreen === Screen.Chat) return;
-    touchEndX.current = e.targetTouches[0].clientX;
-  };
-
-  const handleTouchEnd = () => {
-    if (isMenuOpen || currentScreen === Screen.VirtualTour || currentScreen === Screen.Admin || currentScreen === Screen.Chat || !touchStartX.current || !touchEndX.current) return;
-
-    const distance = touchStartX.current - touchEndX.current;
-    const isLeftSwipe = distance > 70;
-    const isRightSwipe = distance < -70;
-
-    const currentIndex = screenSequence.indexOf(currentScreen);
-
-    if (isLeftSwipe && currentIndex !== -1 && currentIndex < screenSequence.length - 1) {
-      navigateTo(screenSequence[currentIndex + 1]);
-    } else if (isRightSwipe) {
-      if (currentIndex > 0) {
-        navigateTo(screenSequence[currentIndex - 1]);
-      } else {
-        goBack();
-      }
-    }
-
-    touchStartX.current = null;
-    touchEndX.current = null;
-  };
-
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const renderScreen = () => {
-    const props = { navigateTo, goBack };
+    const props = { navigateTo, goBack, toggleMenu };
     switch (currentScreen) {
       case Screen.Home:
         return <Home navigateTo={navigateTo} toggleMenu={toggleMenu} />;
@@ -105,8 +61,10 @@ const App: React.FC = () => {
         return <Contact {...props} />;
       case Screen.Admin:
         return <Admin {...props} />;
-      case Screen.Chat:
+      case Screen.ChatBot:
         return <ChatBot {...props} />;
+      case Screen.SalesGuide:
+        return <SalesGuide {...props} />;
       default:
         return <Home navigateTo={navigateTo} toggleMenu={toggleMenu} />;
     }
@@ -115,12 +73,25 @@ const App: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen items-center bg-gray-100 font-sans overflow-x-hidden">
       <div 
-        className="w-full max-w-[480px] min-h-screen bg-white shadow-2xl relative overflow-hidden flex flex-col touch-pan-y"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        className="w-full max-w-[480px] min-h-screen bg-white shadow-2xl relative overflow-hidden flex flex-col"
       >
-        {renderScreen()}
+        {/* 애니메이션 컨테이너: key가 바뀔 때마다 애니메이션이 재실행됨 */}
+        <main key={currentScreen} className="page-transition flex-1 flex flex-col">
+          {renderScreen()}
+        </main>
+        
+        {/* Floating AI Chatbot Button */}
+        {currentScreen !== Screen.ChatBot && currentScreen !== Screen.Admin && (
+          <button
+            onClick={() => navigateTo(Screen.ChatBot)}
+            className="fixed bottom-24 right-[calc(50%-220px)] max-[480px]:right-6 z-[80] size-14 bg-primary text-white rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center animate-bounce hover:scale-110 active:scale-95 transition-all border-2 border-white"
+            aria-label="AI 컨시어지 상담"
+          >
+            <span className="material-symbols-outlined text-[28px] font-bold">smart_toy</span>
+            <div className="absolute -top-1 -right-1 size-4 bg-red-500 rounded-full border-2 border-white animate-pulse" />
+          </button>
+        )}
+
         <SideMenu 
           isOpen={isMenuOpen} 
           onClose={() => setIsMenuOpen(false)} 

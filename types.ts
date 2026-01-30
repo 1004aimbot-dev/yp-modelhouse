@@ -8,7 +8,8 @@ export enum Screen {
   VirtualTour = 'virtual-tour',
   Contact = 'contact',
   Admin = 'admin',
-  Chat = 'chat'
+  ChatBot = 'chatbot',
+  SalesGuide = 'sales-guide'
 }
 
 export interface HouseType {

@@ -6,9 +6,10 @@ import TopNav from '../components/TopNav';
 interface ContactProps {
   navigateTo: (screen: Screen) => void;
   goBack: () => void;
+  toggleMenu: () => void;
 }
 
-const Contact: React.FC<ContactProps> = ({ navigateTo, goBack }) => {
+const Contact: React.FC<ContactProps> = ({ navigateTo, goBack, toggleMenu }) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [agreed, setAgreed] = useState(false);
@@ -59,7 +60,7 @@ const Contact: React.FC<ContactProps> = ({ navigateTo, goBack }) => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <TopNav title="상담 요청" onBack={goBack} />
+      <TopNav title="상담 요청" onBack={goBack} onMenu={toggleMenu} />
       
       {/* SECTION 07 */}
       <div className="px-6 py-10 text-center border-b border-gray-50 bg-gray-50/30">
@@ -72,7 +73,6 @@ const Contact: React.FC<ContactProps> = ({ navigateTo, goBack }) => {
           </h2>
         </div>
         
-        {/* 리스트 텍스트 크기 축소 (text-[16px]) */}
         <div className="bg-white/90 backdrop-blur-sm rounded-[40px] p-8 border border-gray-100 shadow-xl shadow-black/5 space-y-4 max-w-[360px] mx-auto">
           {[
             { text: "소수 우선 상담제 운영", icon: "group" },
@@ -94,7 +94,6 @@ const Contact: React.FC<ContactProps> = ({ navigateTo, goBack }) => {
       </div>
 
       <div className="px-6 py-10 flex-1">
-        {/* 메인 카피 크기 축소 (text-[30px]) */}
         <h3 className="text-[30px] font-black text-text-main mb-12 leading-[1.15] text-center tracking-tighter">
           이건 집이 아닙니다<br/>
           당신의 <span className="text-primary underline underline-offset-8 decoration-primary/20">다음 10년</span>입니다
@@ -103,7 +102,7 @@ const Contact: React.FC<ContactProps> = ({ navigateTo, goBack }) => {
         <div className="space-y-6 max-w-[400px] mx-auto">
           <div className="flex flex-col">
             <div className="flex items-center justify-between mb-3 px-2">
-              <label className="text-[13px] font-black text-gray-400 uppercase tracking-widest">Client Name</label>
+              <label className="text-[13px] font-black text-gray-400 uppercase tracking-widest">성함 (Client Name)</label>
               <span className="material-symbols-outlined text-gray-200 text-[22px]">person</span>
             </div>
             <input 
@@ -117,7 +116,7 @@ const Contact: React.FC<ContactProps> = ({ navigateTo, goBack }) => {
           
           <div className="flex flex-col">
             <div className="flex items-center justify-between mb-3 px-2">
-              <label className="text-[13px] font-black text-gray-400 uppercase tracking-widest">Mobile Number</label>
+              <label className="text-[13px] font-black text-gray-400 uppercase tracking-widest">휴대폰 번호 (Mobile)</label>
               <span className="material-symbols-outlined text-gray-200 text-[22px]">smartphone</span>
             </div>
             <input 

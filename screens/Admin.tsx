@@ -6,9 +6,10 @@ import TopNav from '../components/TopNav';
 interface AdminProps {
   navigateTo: (screen: Screen) => void;
   goBack: () => void;
+  toggleMenu: () => void;
 }
 
-const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
+const Admin: React.FC<AdminProps> = ({ navigateTo, goBack, toggleMenu }) => {
   const [requests, setRequests] = useState<ConsultationRequest[]>([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
@@ -74,12 +75,12 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
   if (!isAuthenticated) {
     return (
       <div className="flex flex-col bg-white min-h-screen animate-in fade-in duration-300">
-        <TopNav title="관리자 인증" onBack={goBack} />
+        <TopNav title="관리자 인증" onBack={goBack} onMenu={toggleMenu} />
         <div className="flex-1 flex flex-col items-center justify-center px-8 pb-20">
           <div className="size-20 bg-gray-50 rounded-[30px] flex items-center justify-center mb-6 text-gray-300">
             <span className="material-symbols-outlined text-[40px]">lock</span>
           </div>
-          <h2 className="text-[22px] font-black text-[#1A1A1A] tracking-tighter mb-2">Admin Login</h2>
+          <h2 className="text-[22px] font-black text-[#1A1A1A] tracking-tighter mb-2">관리자 로그인</h2>
           <p className="text-[#888888] text-[14px] text-center mb-10 leading-relaxed">
             비밀번호 4자리를 입력해주세요.
           </p>
@@ -109,7 +110,7 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
 
   return (
     <div className="flex flex-col bg-[#F8F9FA] min-h-screen animate-in fade-in duration-300">
-      <TopNav title="관리 대시보드" onBack={goBack} />
+      <TopNav title="관리 대시보드" onBack={goBack} onMenu={toggleMenu} />
       
       <div className="p-6">
         <div className="flex justify-between items-end mb-8">
@@ -178,7 +179,7 @@ const Admin: React.FC<AdminProps> = ({ navigateTo, goBack }) => {
 
       <div className="mt-auto p-12 opacity-30 text-center">
         <p className="text-[9px] font-black tracking-[0.5em] text-gray-400 uppercase">
-          SECURE ADMIN CONSOLE
+          보안 관리자 콘솔
         </p>
       </div>
     </div>
